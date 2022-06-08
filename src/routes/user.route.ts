@@ -228,7 +228,7 @@ UserRoute.put('/change_password/:id', checkAccessToken, async(req, res) => {
  *  Handle Forgot user password
  * *************************************************************************/
 UserRoute.post('/forgot_password', async(req, res) => {
-    var vaildationCode = randomize('0', 5);
+    var verificationCode = randomize('0', 5);
 
     try {
         await UserInstance.findOne({
@@ -240,7 +240,7 @@ UserRoute.post('/forgot_password', async(req, res) => {
             if (user) {
                 //step 1
                 let transporter = nodemailer.createTransport({
-                    host: 'data-intell.com',
+                    host: 'example.com',
                     port: 465,
                     secure: true,
                     auth: {
@@ -255,7 +255,7 @@ UserRoute.post('/forgot_password', async(req, res) => {
                     to: user.email,
                     subject: 'Rest Account Password',
                     text: 'Hello ' + user.firstName + ', \nYour request to reset password has been acknowledged by mDokta. \nUse this verification code'+
-                    ' '+ vaildationCode + ' to reset your password. \n\nThank you. Reguards'
+                    ' '+ verificationCode + ' to reset your password. \n\nThank you. Reguards'
                 }
     
                 //step 3
@@ -269,7 +269,7 @@ UserRoute.post('/forgot_password', async(req, res) => {
                     else{
                         //console.log('Email sent..!!');
                         UserInstance.update({
-                            resetCode: vaildationCode
+                            resetCode: verificationCode
                         }, {
                             where: {email: req.body.email}
                         })
@@ -579,7 +579,7 @@ UserRoute.put('/update/info/:id', checkAccessToken, async(req: Request, res: Res
 /***************************************************************************
  *  Handle Edit user profile pic
  * *************************************************************************/
-UserRoute.put('/update/profile_photo/:id', checkAccessToken, upload.single('profilePhoto'), async(req: Request, res: Response) => {
+UserRoute.put('/update/profile_photo/:id', upload.single('profilePhoto'), async(req: Request, res: Response) => {
     try {
         await UserInstance.update({
             profilePhoto: 'http://localhost:2222/user_photo/' + req.file?.originalname,

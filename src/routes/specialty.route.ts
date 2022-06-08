@@ -207,7 +207,7 @@ SpecialtyRoute.put('/update/:id', checkAccessToken, async(req: Request, res: Res
 /***************************************************************************
  *  Edit specialty icon
  * *************************************************************************/
-SpecialtyRoute.put('/update/specialty_icon/:id', checkAccessToken, upload.single('specialty_icon'), async(req: Request, res: Response) => {
+SpecialtyRoute.put('/update/specialty_icon/:id', upload.single('specialty_icon'), async(req: Request, res: Response) => {
     try {
         await SpecialtyInstance.update({
             specialty_icon: 'http://localhost:2222/specialty_icon/' + req.file?.originalname,
